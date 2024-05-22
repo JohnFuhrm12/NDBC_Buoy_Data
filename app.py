@@ -1,14 +1,13 @@
-from flask import Flask
-from flask_restful import Api, Resource
+from flask import Flask, request, jsonify
+from pandas import read_csv
 
 app = Flask(__name__)
-api = Api(app)
 
-class HelloWorld(Resource):
-    def get(self):
-        return {"data": "Hello World!"}
-
-api.add_resource(HelloWorld, "/helloworld")
+@app.route("/buoy/<buoy_id>")
+def getBuoyData(buoy_id):
+    BuoyInfo = read_csv(f"https://www.ndbc.noaa.gov/data/realtime2/{buoy_id}.txt")
+    print(BuoyInfo)
+    return {"id": buoy_id}
 
 if __name__ == "main":
     app.run(debug=True)
