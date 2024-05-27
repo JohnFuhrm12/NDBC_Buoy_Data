@@ -32,5 +32,13 @@ def getSpectralData(buoy_id):
     json_output = buoy_data_df.to_json(indent=1, orient="records")
     return json_output
 
+@app.route("/buoy/<buoy_id>/spectral/raw")
+@cross_origin()
+def getSpectralDataRaw(buoy_id):
+    buoy_csv = f"https://www.ndbc.noaa.gov/data/realtime2/{buoy_id}.data_spec"
+    buoy_data_df = read_csv(buoy_csv, delim_whitespace=True)
+    json_output = buoy_data_df.to_json(indent=1, orient="records")
+    return json_output
+
 if __name__ == "main":
     app.run(debug=True)
