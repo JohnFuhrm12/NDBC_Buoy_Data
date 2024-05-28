@@ -74,7 +74,8 @@ def getSpectralDataRawPairs(buoy_id):
         data_list = json.loads(json_data)
         spectral_data_str = list(data_list[0].values())[0]
         pairs = spectral_data_str.split()[6:]
-        result = [{"spec": float(pairs[i]), "freq": pairs[i+1]} for i in range(0, len(pairs), 2)]
+        cleaned_freq = [float(freq.strip('()')) for freq in pairs[1::2]]
+        result = [{"spec": float(pairs[i]), "freq": cleaned_freq[i//2]} for i in range(0, len(pairs), 2)]
         return result
 
 @app.route("/ww3/buoy/<buoy_id>")
