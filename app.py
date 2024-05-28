@@ -82,7 +82,40 @@ def getSpectralDataRawPairs(buoy_id):
 @cross_origin()
 def getWaveWatcher3Data(buoy_id):
     ww3_bull = f"https://polar.ncep.noaa.gov/waves/WEB/multi_1.latest_run/plots/multi_1.{buoy_id}.bull"
-    print(ww3_bull)
+    response = requests.get(ww3_bull)
+    data = response.content.decode('utf-8')
+
+    rows = data.split('\n')
+    rowsCleaned = rows[7:150]
+
+    data = []
+
+    def parse_row_parameters(row_parameters):
+        row_data = {
+            "day": int(row_parameters[1].strip().split()[0]),
+            "hour": int(row_parameters[1].strip().split()[1]),
+            "sWVHT": float(row_parameters[2].strip().split()[0]),
+            "dataRows": int(row_parameters[2].strip().split()[1])
+        }
+
+        for i in range(1, row_data["dataRows"] + 1):
+            swell_info = row_parameters[2 + i].strip().split()
+            if len(swell_info) >= 3:
+                row_data[f"swell{i}Height"] = float(swell_info[0])
+                row_data[f"swell{i}Period"] = float(swell_info[1])
+                row_data[f"swell{i}Dir"] = int(swell_info[2])
+            else:
+                print(f"Warning: Insufficient data for swell {i} in row {row_data['day']} {row_data['hour']}")
+
+        return row_data
+    
+    for row in rowsCleaned:
+        parameters = row.split("|")
+        parameters = [param.strip() for param in parameters]
+        swellObject = parse_row_parameters(parameters)
+        data.append(swellObject)
+
+    return data
 
 if __name__ == "main":
     app.run(debug=True)
