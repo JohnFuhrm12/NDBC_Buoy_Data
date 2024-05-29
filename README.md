@@ -18,4 +18,4 @@ Returns a given NDBC buoy raw spectral dataset in JSON
 Returns a given NDBC buoys' most recent raw spectral dataset organized as wave energey and frequency pairs within a list
 
 /ww3/buoy/{buoy_id}:
-Returns Wave Watcher 3 data for a given NDBC buoy in .bull format
+Returns Wave Watcher 3 data for a given NDBC buoy in JSON
