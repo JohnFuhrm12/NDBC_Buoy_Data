@@ -78,10 +78,10 @@ def getSpectralDataRawPairs(buoy_id):
         result = [{"spec": float(pairs[i]), "freq": cleaned_freq[i//2]} for i in range(0, len(pairs), 2)]
         return result
 
-@app.route("/ww3/buoy/<buoy_id>")
+@app.route("/ww3/<model_date>/buoy/<buoy_id>")
 @cross_origin()
-def getWaveWatcher3Data(buoy_id):
-    ww3_bull = f"https://polar.ncep.noaa.gov/waves/WEB/multi_1.latest_run/plots/multi_1.{buoy_id}.bull"
+def getWaveWatcher3Data(model_date, buoy_id):
+    ww3_bull = f"https://ftpprd.ncep.noaa.gov/data/nccf/com/gfs/prod/gfs.{model_date}/00/wave/station/bulls.t00z/gfswave.{buoy_id}.bull"
     response = requests.get(ww3_bull)
     data = response.content.decode('utf-8')
 
@@ -100,6 +100,8 @@ def getWaveWatcher3Data(buoy_id):
 
         for i in range(1, row_data["dataRows"] + 1):
             swell_info = row_parameters[2 + i].strip().split()
+            if swell_info[0][0] == '*':
+                swell_info = swell_info[1:]
             if len(swell_info) >= 3:
                 row_data[f"swell{i}Height"] = float(swell_info[0])
                 row_data[f"swell{i}Period"] = float(swell_info[1])
