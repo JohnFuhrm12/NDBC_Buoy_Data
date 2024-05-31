@@ -86,7 +86,7 @@ def getWaveWatcher3Data(model_date, buoy_id):
     data = response.content.decode('utf-8')
 
     rows = data.split('\n')
-    rowsCleaned = rows[7:150]
+    rowsCleaned = rows[7:160]
 
     data = []
 
