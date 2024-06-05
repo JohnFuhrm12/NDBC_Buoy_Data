@@ -100,12 +100,15 @@ def getWaveWatcher3Data(model_date, buoy_id):
 
         for i in range(1, row_data["dataRows"] + 1):
             swell_info = row_parameters[2 + i].strip().split()
-            if swell_info[0][0] == '*':
-                swell_info = swell_info[1:]
-            if len(swell_info) >= 3:
-                row_data[f"swell{i}Height"] = float(swell_info[0])
-                row_data[f"swell{i}Period"] = float(swell_info[1])
-                row_data[f"swell{i}Dir"] = int(swell_info[2])
+            if len(swell_info) >= 3: 
+                if swell_info[0][0] == '*':
+                    swell_info = swell_info[1:] 
+                    if len(swell_info) >= 3:
+                        row_data[f"swell{i}Height"] = float(swell_info[0])
+                        row_data[f"swell{i}Period"] = float(swell_info[1])
+                        row_data[f"swell{i}Dir"] = int(swell_info[2])
+                    else:
+                        print(f"Warning: Insufficient data for swell {i} in row {row_data['day']} {row_data['hour']}")
             else:
                 print(f"Warning: Insufficient data for swell {i} in row {row_data['day']} {row_data['hour']}")
 
