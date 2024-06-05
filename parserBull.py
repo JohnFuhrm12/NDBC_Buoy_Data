@@ -9,7 +9,15 @@ def getWaveWatcher3Data(model_date, buoy_id):
     ## 00 after model date indicates hour of model data, can also be 06, 12, and 18
 
     rows = data.split('\n')
-    rowsCleaned = rows[7:100] # Start at row 7 to remove header, end at row 160 to give 7 days
+    end_index = 100
+
+    # Find the index where the bulletin ends
+    for i in range(7, len(rows)):
+        if rows[i][1] == '+':
+            end_index = i
+            break
+
+    rowsCleaned = rows[7:end_index] # Start at row 7 to remove header, end where the bulletin ends
 
     data = []
 

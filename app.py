@@ -13,12 +13,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/')
 @cross_origin()
 def hello_world():
-    return 'Hello from Flask!'
-
-@app.route('/test')
-@cross_origin()
-def test():
-    return 'Test Successful!'
+    return 'Hello from Flask! Available Data: Buoy, Spectral, Raw Spectral'
 
 @app.route("/buoy/<buoy_id>")
 @cross_origin()
@@ -68,7 +63,7 @@ def getSpectralDataRawPairs(buoy_id):
             return json_data
         else:
             return None
-        
+
     json_data = getSpectralDataRaw()
     if json_data:
         data_list = json.loads(json_data)
@@ -86,7 +81,14 @@ def getWaveWatcher3Data(model_date, buoy_id):
     data = response.content.decode('utf-8')
 
     rows = data.split('\n')
-    rowsCleaned = rows[7:160]
+    end_index = 100
+
+    for i in range(7, len(rows)):
+        if rows[i][1] == '+':
+            end_index = i
+            break
+
+    rowsCleaned = rows[7:end_index]
 
     data = []
 
@@ -100,9 +102,9 @@ def getWaveWatcher3Data(model_date, buoy_id):
 
         for i in range(1, row_data["dataRows"] + 1):
             swell_info = row_parameters[2 + i].strip().split()
-            if len(swell_info) >= 3: 
+            if len(swell_info) >= 3:
                 if swell_info[0][0] == '*':
-                    swell_info = swell_info[1:] 
+                    swell_info = swell_info[1:]
                     if len(swell_info) >= 3:
                         row_data[f"swell{i}Height"] = float(swell_info[0])
                         row_data[f"swell{i}Period"] = float(swell_info[1])
@@ -113,7 +115,7 @@ def getWaveWatcher3Data(model_date, buoy_id):
                 print(f"Warning: Insufficient data for swell {i} in row {row_data['day']} {row_data['hour']}")
 
         return row_data
-    
+
     for row in rowsCleaned:
         parameters = row.split("|")
         parameters = [param.strip() for param in parameters]
