@@ -1,6 +1,6 @@
 import requests
 
-BASE = "https://johnfuhrm12.pythonanywhere.com/"
+BASE = "https://ndbc-buoy-data.onrender.com/"
 # BASE = "http://127.0.0.1:5000/"
 
 response = requests.get(BASE  + "ww3/20251116/buoy/51211")
