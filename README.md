@@ -1,7 +1,7 @@
 # NDBC Buoy Data
 Flask API to parse NDBC buoy data and WW3 data by buoy id from CSV and NOAA .bull to JSON 
 
-Deployed on PythonAnywhere, paid account for unrestricted external API access (NDBC, NCEP)
+Deployed on Render for unrestricted external API access (NDBC, NCEP)
 
 # Endpoints
 
