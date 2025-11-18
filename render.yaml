@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: ndbc-api
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn flask_app:app"
+    autoDeploy: true
